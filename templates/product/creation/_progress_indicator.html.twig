@@ -1,0 +1,24 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {% set step_routes = {
+            'Type': path('product_creation_step1'),
+            'Details': path('product_creation_step2'),
+            'Logistics': path('product_creation_logistics'),
+            'License': path('product_creation_license'),
+            'Confirmation': path('product_creation_confirmation'),
+            'Summary': path('product_creation_summary'),
+        } %}
+
+        {% for step_name, step_route in step_routes %}
+            {% if step_name in steps %}
+                <li class="breadcrumb-item {{ current_step == step_name ? 'active' : '' }}">
+                    {% if current_step == step_name %}
+                        {{ step_name }}
+                    {% else %}
+                        <a href="{{ step_route }}">{{ step_name }}</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</nav>

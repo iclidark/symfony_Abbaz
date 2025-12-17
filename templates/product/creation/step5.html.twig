@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Product - Step 5: High Price Confirmation{% endblock %}
+
+{% block body %}
+    {% include 'product/creation/_progress_indicator.html.twig' %}
+
+    <h1>Create Product - Step 5: High Price Confirmation</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+
+    <div class="d-flex justify-content-between">
+        <a href="{{ path(product.type == 'physical' ? 'product_creation_logistics' : 'product_creation_license') }}" class="btn btn-secondary">Previous</a>
+        <button type="submit" class="btn btn-primary">Next</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

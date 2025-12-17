@@ -1,0 +1,7 @@
+{# templates/product/creation/_progress.html.twig #}
+
+<div class="progress mb-4">
+    <div class="progress-bar" role="progressbar" style="width: {{ (current_step / total_steps) * 100 }}%;" aria-valuenow="{{ current_step }}" aria-valuemin="1" aria-valuemax="{{ total_steps }}">
+        Step {{ current_step }} of {{ total_steps }}
+    </div>
+</div>

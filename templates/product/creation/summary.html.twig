@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Product - Summary{% endblock %}
+
+{% block body %}
+    {% include 'product/creation/_progress_indicator.html.twig' %}
+
+    <h1>Create Product - Summary</h1>
+
+    <h2>Product Details</h2>
+    <p><strong>Name:</strong> {{ product.name }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+    <p><strong>Price:</strong> {{ product.price }}</p>
+    <p><strong>Type:</strong> {{ product.type }}</p>
+
+    {% if product.type == 'physical' %}
+        <h2>Logistics</h2>
+        <p><strong>Stock:</strong> {{ product.stock }}</p>
+    {% else %}
+        <h2>License</h2>
+        <p><strong>License:</strong> {{ product.license }}</p>
+    {% endif %}
+
+    <form method="post">
+        <div class="d-flex justify-content-between">
+            <a href="{{ path(product.price > 1000 ? 'product_creation_confirmation' : (product.type == 'physical' ? 'product_creation_logistics' : 'product_creation_license')) }}" class="btn btn-secondary">Previous</a>
+            <button type="submit" class="btn btn-success">Create Product</button>
+        </div>
+    </form>
+{% endblock %}

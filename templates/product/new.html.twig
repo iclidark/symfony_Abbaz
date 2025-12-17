@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Create a new Product</h1>
+
+    <h2>{{ flow.getStepLabel(flow.getCurrentStepNumber()) }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <div>
+            {% if flow.getCurrentStepNumber() > 1 %}
+                <button type="submit" name="flow_product_transition" value="back">Back</button>
+            {% endif %}
+            <button type="submit">Next</button>
+        </div>
+    {{ form_end(form) }}
+
+    <p>
+        Step {{ flow.getCurrentStepNumber() }} of {{ flow.getStepCount() }}
+    </p>
+{% endblock %}

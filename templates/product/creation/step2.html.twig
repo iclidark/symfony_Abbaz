@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Product - Step 2: Details{% endblock %}
+
+{% block body %}
+    {% include 'product/creation/_progress_indicator.html.twig' %}
+
+    <h1>Create Product - Step 2: Details</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+
+    <div class="d-flex justify-content-between">
+        <a href="{{ path('product_creation_step1') }}" class="btn btn-secondary">Previous</a>
+        <button type="submit" class="btn btn-primary">Next</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

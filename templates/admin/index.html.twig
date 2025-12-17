@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Management{% endblock %}
+
+{% block body %}
+    <h1>User Management</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>
+                    <a href="{{ path('admin_users_edit', {'id': user.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no users found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_users_new') }}">Create new</a>
+{% endblock %}

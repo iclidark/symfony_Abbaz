@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block body %}
+    <h1>Product List</h1>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    <a href="{{ path('product_creation_step1') }}" class="btn btn-primary mb-3">Create Product</a>
+    <a href="{{ path('product_export_csv') }}" class="btn btn-secondary mb-3">Export to CSV</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Type</th>
+                <th>Stock</th>
+                <th>License</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.type }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ product.license }}</td>
+                    <td>
+                        {% if is_granted('PRODUCT_EDIT', product) %}
+                            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+                        {% endif %}
+                        {% if is_granted('PRODUCT_DELETE', product) %}
+                            <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
