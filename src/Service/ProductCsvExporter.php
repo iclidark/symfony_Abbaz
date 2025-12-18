@@ -21,9 +21,9 @@ class ProductCsvExporter
         $csv = "name,description,price\n";
         foreach ($products as $product) {
             $csv .= sprintf(
-                "\"%s\",\"%s\",\"%s\"\n",
-                $product->getName(),
-                $product->getDescription(),
+                '"%s","%s","%.2f"\n',
+                str_replace('"', '""', $product->getName()),
+                str_replace('"', '""', $product->getDescription()),
                 $product->getPrice()
             );
         }

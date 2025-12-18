@@ -17,6 +17,9 @@
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_users_index') }}">Users</a>
             {% endif %}
+            {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('client_index') }}">Clients</a>
+            {% endif %}
             <a href="{{ path('app_logout') }}">Logout</a>
         {% else %}
             <a href="{{ path('app_login') }}">Login</a>
