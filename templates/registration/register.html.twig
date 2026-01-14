@@ -2,20 +2,59 @@
 
 {% block title %}Register{% endblock %}
 
-{% block body %}
-    <h1>Register</h1>
+{# Tell the base template to use the centered layout #}
+{% block body_class %}layout-centered{% endblock %}
 
-    {{ form_errors(registrationForm) }}
+{# Define the content for the centered layout #}
+{% block layout %}
+    <div class="auth-wrapper">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="text-center mb-4">Create an Account</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.firstname) }}
-        {{ form_row(registrationForm.lastname) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    <div class="form-group">
+                        {{ form_label(registrationForm.firstname) }}
+                        {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.firstname) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.lastname) }}
+                        {{ form_widget(registrationForm.lastname, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.lastname) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.email) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword, 'Password') }}
+                        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+
+                    <div class="form-group">
+                         {{ form_widget(registrationForm.agreeTerms) }}
+                         {{ form_label(registrationForm.agreeTerms) }}
+                         {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Register</button>
+
+                {{ form_end(registrationForm) }}
+
+                <p class="text-center mt-3">
+                    Already have an account? <a href="{{ path('app_login') }}">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
+{# We leave the default body block empty because we redefined the entire 'layout' block #}
+{% block body %}{% endblock %}

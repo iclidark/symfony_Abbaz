@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Task List</h1>
         {# This route name needs to exist in your controller #}
-        <a href="#" class="btn btn-primary">New Task</a>
+        <a href="#" class="btn btn-success">New Task</a>
     </div>
 
     <div class="card">
@@ -32,8 +32,11 @@
                         <td>{{ task.status }}</td>
                         <td>{{ task.createdAt|date('Y-m-d H:i') }}</td>
                         <td>
-                            {# Add actions like edit or delete here #}
-                            <a href="#" class="btn btn-secondary btn-sm">Edit</a>
+                            <div class="d-flex gap-2">
+                                {# Add actions like edit or delete here #}
+                                <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
                         </td>
                     </tr>
                 {% else %}
