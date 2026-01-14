@@ -22,6 +22,9 @@ class Task
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = 'To Do';
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -96,6 +99,18 @@ class Task
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

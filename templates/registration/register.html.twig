@@ -1,60 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
-{# Tell the base template to use the centered layout #}
-{% block body_class %}layout-centered{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center mb-4">Créer un compte</h1>
 
-{# Define the content for the centered layout #}
-{% block layout %}
-    <div class="auth-wrapper">
-        <div class="card">
-            <div class="card-body">
-                <h1 class="text-center mb-4">Create an Account</h1>
+                    {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
-                {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
-
-                    <div class="form-group">
-                        {{ form_label(registrationForm.firstname) }}
-                        {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(registrationForm.firstname) }}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.firstname, {
+                                label: 'Prénom',
+                                'attr': {'placeholder': 'Votre prénom'}
+                            }) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.lastname, {
+                                label: 'Nom',
+                                'attr': {'placeholder': 'Votre nom'}
+                            }) }}
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        {{ form_label(registrationForm.lastname) }}
-                        {{ form_widget(registrationForm.lastname, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(registrationForm.lastname) }}
+                    <div class="mb-3">
+                        {{ form_row(registrationForm.email, {
+                            label: 'Adresse Email',
+                            'attr': {'placeholder': 'exemple@domaine.com'}
+                        }) }}
                     </div>
 
-                    <div class="form-group">
-                        {{ form_label(registrationForm.email) }}
-                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(registrationForm.email) }}
+                    <div class="mb-3">
+                        {{ form_row(registrationForm.plainPassword, {
+                            label: 'Mot de passe'
+                        }) }}
                     </div>
 
-                    <div class="form-group">
-                        {{ form_label(registrationForm.plainPassword, 'Password') }}
-                        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(registrationForm.plainPassword) }}
+                    <div class="form-check mb-3">
+                        {{ form_widget(registrationForm.agreeTerms) }}
+                        <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                            Accepter les <a href="#">conditions d'utilisation</a>
+                        </label>
+                        <div class="invalid-feedback">
+                            {{ form_errors(registrationForm.agreeTerms) }}
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                         {{ form_widget(registrationForm.agreeTerms) }}
-                         {{ form_label(registrationForm.agreeTerms) }}
-                         {{ form_errors(registrationForm.agreeTerms) }}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Créer mon compte</button>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100">Register</button>
+                    {{ form_end(registrationForm) }}
 
-                {{ form_end(registrationForm) }}
-
-                <p class="text-center mt-3">
-                    Already have an account? <a href="{{ path('app_login') }}">Login</a>
-                </p>
+                    <p class="text-center mt-3">
+                        Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
-
-{# We leave the default body block empty because we redefined the entire 'layout' block #}
-{% block body %}{% endblock %}

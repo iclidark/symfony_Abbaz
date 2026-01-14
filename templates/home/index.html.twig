@@ -1,9 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Bienvenue !{% endblock %}
 
 {% block body %}
-<div class="example-wrapper">
-    <h1>Hello World! ✅</h1>
+<div class="container text-center mt-5">
+    <div class="jumbotron">
+        <h1 class="display-4">Bienvenue sur votre gestionnaire de tâches</h1>
+        <p class="lead">Organisez votre travail et votre vie, enfin simplement.</p>
+        <hr class="my-4">
+        <p>Commencez dès maintenant en créant votre première tâche ou en consultant votre liste.</p>
+        <a class="btn btn-primary btn-lg" href="{{ path('task_list') }}" role="button"><i class="fa-solid fa-tasks me-2"></i>Voir mes tâches</a>
+        <a class="btn btn-success btn-lg" href="{{ path('task_new') }}" role="button"><i class="fa-solid fa-plus me-2"></i>Créer une nouvelle tâche</a>
+    </div>
 </div>
 {% endblock %}

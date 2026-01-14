@@ -1,18 +1,54 @@
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Task{% endblock %}
+{% block title %}Edit Task: {{ task.title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="px-6 py-4 bg-gray-100 border-b border-gray-200">
-                <h1 class="text-2xl font-bold text-gray-800">Edit Task</h1>
-            </div>
-            <div class="p-6">
-                {{ include('task/_form.html.twig', {'button_label': 'Update Task'}) }}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h1 class="mb-0"><i class="fa-solid fa-pencil me-2"></i>Edit Task</h1>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(form.title) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 6}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(form.description) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.status, 'Status', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.status, {'attr': {'class': 'form-select'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(form.status) }}
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-end">
+                         <a href="{{ path('task_show', {'id': task.id}) }}" class="btn btn-outline-secondary"><i class="fa-solid fa-times me-1"></i>Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i>Update Task</button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
             </div>
         </div>
     </div>
 {% endblock %}
-
