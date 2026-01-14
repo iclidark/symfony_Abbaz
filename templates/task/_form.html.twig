@@ -1,0 +1,23 @@
+
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div>
+        {{ form_label(form.name, 'Task Name', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        {{ form_widget(form.name, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}}) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div>
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm', 'rows': 4}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="flex justify-end space-x-4">
+        <a href="{{ path('app_task_index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+            Cancel
+        </a>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            {{ button_label|default('Save Task') }}
+        </button>
+    </div>
+{{ form_end(form) }}

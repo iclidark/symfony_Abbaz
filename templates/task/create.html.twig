@@ -1,0 +1,18 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Task{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="px-6 py-4 bg-gray-100 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-gray-800">Create New Task</h1>
+            </div>
+            <div class="p-6">
+                {{ include('task/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

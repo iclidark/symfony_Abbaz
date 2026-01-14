@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Application Summary{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="h3 mb-0">Application Summary</h1>
+                    </div>
+                    <div class="card-body">
+                        <p>Please review your information before submitting.</p>
+
+                        <div class="card mb-4">
+                            <div class="card-header">Personal Information</div>
+                            <div class="card-body">
+                                <p><strong>First Name:</strong> {{ candidate.firstName }}</p>
+                                <p><strong>Last Name:</strong> {{ candidate.lastName }}</p>
+                                <p><strong>Email:</strong> {{ candidate.email }}</p>
+                                <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+                            </div>
+                        </div>
+
+                        {% if candidate.hasExperience is not null %}
+                        <div class="card mb-4">
+                            <div class="card-header">Experience</div>
+                            <div class="card-body">
+                                <p><strong>Has experience?</strong> {{ candidate.hasExperience ? 'Yes' : 'No' }}</p>
+                                {% if candidate.hasExperience %}
+                                    <p><strong>Experience Details:</strong> {{ candidate.experienceDetails|nl2br }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="card mb-4">
+                            <div class="card-header">Availability</div>
+                            <div class="card-body">
+                                <p><strong>Available Immediately:</strong> {{ candidate.isAvailableImmediately ? 'Yes' : 'No' }}</p>
+                                {% if not candidate.isAvailableImmediately %}
+                                    <p><strong>Availability Date:</strong> {{ candidate.availabilityDate|date('Y-m-d') }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong>Consent:</strong> You have agreed to the processing of your personal data.
+                        </div>
+
+                        <form method="post">
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{{ path('app_apply_step', {'step': total_steps}) }}" class="btn btn-secondary">Back to last step</a>
+                                <button type="submit" class="btn btn-success">Submit Application</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

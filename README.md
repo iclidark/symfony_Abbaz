@@ -1,65 +1,85 @@
-# Symfony 7.4 Boilerplate 
+
+# Application de Gestion de Tâches avec Symfony
+
+Ce projet est une application web simple développée avec Symfony 7.4 pour gérer une liste de tâches. Elle intègre une fonctionnalité complète de suivi de l'historique pour chaque tâche, fournissant une piste d'audit détaillée.
 
 Attention : Il vous faut PHP >=8.2 pour faire fonctionner ce projet.
+
+## Fonctionnalités
+
+- **Gestion des Tâches :** Créez, consultez, mettez à jour et supprimez des tâches.
+- **Historique des Modifications :** Chaque tâche dispose d'un historique complet. Toutes les actions (création, modification, suppression) sont enregistrées et associées à un utilisateur.
+- **Piste d'Audit :** L'historique fournit une piste d'audit claire, indiquant quel utilisateur a effectué une action et à quel moment.
+- **Intégration Base de Données :** Les données sont stockées et gérées de manière persistante grâce à une base de données relationnelle (MariaDB/MySQL) et l'ORM Doctrine.
 
 ## Initialisation de votre IDE
 
 ### PHPStorm
 
-1. Ouvrir le projet dans PHPStorm
-2. Installer les extensions Twig et Symfony
-    - Aller dans File > Settings > Plugins
-    - Installer les extensions (Twig, EA Inspection, PHP Annotations, .env files support)
+1. Ouvrir le projet dans PHPStorm.
+2. Installer les extensions recommandées pour Symfony : `File > Settings > Plugins` (Twig, Symfony Support, PHP Annotations).
 
 ### Visual Studio Code
 
-1. Ouvrir le projet dans Visual Studio Code
-2. Installer les extensions pour PHP, Twig et Symfony
-    - Aller dans l'onglet Extensions
-    - Installer les extensions (whatwedo.twig, TheNouillet.symfony-vscode, DEVSENSE.phptools-vscode, 
-    bmewburn.vscode-intelephense-client, zobo.php-intellisense)
+1. Ouvrir le projet dans Visual Studio Code.
+2. Installer les extensions recommandées depuis l'onglet "Extensions": `whatwedo.twig`, `TheNouillet.symfony-vscode`, `DEVSENSE.phptools-vscode`.
 
-## Installation avec IDX
+## Installation et Lancement
 
-1. Fork le projet sur votre compte GitHub
-2. Importer le projet depuis votre GitHub sur IDX
-3. Le projet est déjà lancé il suffit d'aller dans l'onglet du terminal avec `start` puis cliquer sur le lien `localhost`
-4. Lancer la commande `composer i` pour installer les dépendances du projet.
-5. Pour accéder à la base de données `mysql -u root`
-6. Dans un fichier à la racine `.env.local` mettre cette variable d'environnement 
-`DATABASE_URL="mysql://root:@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4"`
+Suivez les étapes ci-dessous pour installer et lancer le projet, que ce soit sur IDX ou en local.
 
-## Installation en local
+### 1. Installation des Dépendances
 
-1. Cloner le projet
-2. Installer PHP >= 8.2 et Composer (Sur votre machine utiliser XAMPP pour windows, MAMP pour mac ou LAMP pour linux bien prendre la version PHP 8.2)
-3. Installer les dépendances du projet avec la commande `composer install`
-4. Faire un virtual host sur votre serveur local (XAMPP par exemple pour Windows) 
- - Ouvrir le fichier `httpd-vhosts.conf` dans le répertoire `C:\xampp\apache\conf\extra`
-    - Ajouter le code suivant à la fin du fichier
+Assurez-vous que [Composer](https://getcomposer.org/) est installé sur votre machine, puis lancez la commande suivante à la racine du projet pour installer les dépendances PHP :
+
+```bash
+composer install
+```
+
+### 2. Configuration de la Base de Données
+
+1.  Créez un fichier `.env.local` à la racine du projet en copiant `.env`.
+2.  Modifiez la variable `DATABASE_URL` dans le fichier `.env.local` pour correspondre à la configuration de votre base de données. Exemple pour MariaDB/MySQL :
+
     ```
-    <VirtualHost *>
-        DocumentRoot "C:\Users\votre_username\Documents\iut\symfony_base\public"
-        ServerName symfony_base.local
-        
-        <Directory "C:\Users\votre_username\Documents\iut\symfony_base\public">
-            AllowOverride All
-            Require all granted
-        </Directory>
-    </VirtualHost>
+    DATABASE_URL="mysql://root:VOTRE_MOT_DE_PASSE@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4"
     ```
-    - Ajouter l'adresse IP de votre machine dans le fichier `C:\Windows\System32\drivers\etc\hosts`
-    ```
-    127.0.0.1 symfony_base.local
-    ```
-    - Redémarrer Apache
-    - Accéder à l'adresse `symfony_base.local` dans votre navigateur
 
-4. Créer un fichier `.env.local` à la racine du projet et ajouter la configuration de la base de données
-5. Créer la base de données avec la commande `php bin/console doctrine:database:create`
+    *Remplacez `VOTRE_MOT_DE_PASSE` par le mot de passe de votre utilisateur `root` (ou laissez vide s'il n'y en a pas, comme c'est souvent le cas avec IDX ou XAMPP par défaut).*
 
-## Utilisation
+### 3. Initialisation de la Base de Données
 
-- N'hésitez pas à consulter la documentation de Symfony pour plus d'informations sur l'utilisation du framework : https://symfony.com/doc/current/index.html
+Exécutez les commandes suivantes pour créer la base de données et appliquer les migrations :
 
-- Notez comment fonctionne votre projet dans le fichier README.md et mettez à jour ce fichier au fur et à mesure de l'avancement de votre projet pour aider les autres développeurs à comprendre comment fonctionne votre projet.
+```bash
+# Crée la base de données si elle n'existe pas
+php bin/console doctrine:database:create
+
+# Exécute les migrations pour créer le schéma (tables, colonnes, etc.)
+php bin/console doctrine:migrations:migrate
+```
+
+### 4. Chargement des Données de Test (Fixtures)
+
+Pour peupler la base de données avec des utilisateurs et des tâches de démonstration, exécutez la commande suivante :
+
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+### 5. Lancement du Serveur
+
+Vous pouvez maintenant lancer le serveur de développement intégré de Symfony :
+
+```bash
+symfony server:start
+```
+
+L'application sera accessible à l'adresse indiquée dans le terminal (généralement `https://127.0.0.1:8000`).
+
+## Utilisation de l'Application
+
+- **Liste des tâches :** Accédez à la route `/tasks` pour voir toutes les tâches.
+- **Détails d'une tâche :** Cliquez sur une tâche pour accéder à sa page de détail (`/task/{id}`), où vous pourrez également consulter son historique de modifications.
+
+N'hésitez pas à consulter la [documentation officielle de Symfony](https://symfony.com/doc/current/index.html) pour plus d'informations.

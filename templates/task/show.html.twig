@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Task Details{% endblock %}
+
+{% block body %}
+    <h1>Task Details</h1>
+
+    <h2>{{ task.title }}</h2>
+    <p>{{ task.description }}</p>
+    <p><small>Created at: {{ task.createdAt|date('Y-m-d H:i:s') }}</small></p>
+
+    <hr>
+
+    <h2>Task History</h2>
+    {% if history|length > 0 %}
+        <ul>
+            {% for entry in history %}
+                <li>
+                    {{ entry.changedAt|date('Y-m-d H:i:s') }}: The task was {{ entry.action }} by {{ entry.user.firstname }} {{ entry.user.lastname }}.
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No history for this task.</p>
+    {% endif %}
+
+    <a href="{{ path('task_list') }}">Back to list</a>
+{% endblock %}

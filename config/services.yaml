@@ -19,3 +19,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\TaskFileService:
+        bind:
+            $projectDir: '%kernel.project_dir%'
+
+    App\EntityListener\TaskListener:
+        tags:
+            - { name: doctrine.event_listener, event: preRemove }
