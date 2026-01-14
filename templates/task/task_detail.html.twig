@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Task Details{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Task Details</h1>
+        <a href="{{ path('task_list') }}" class="btn btn-secondary">Back to List</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Task Information
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Title</dt>
+                <dd class="col-sm-9">{{ task.title }}</dd>
+
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">{{ task.description|nl2br }}</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">{{ task.status }}</dd>
+
+                <dt class="col-sm-3">Created At</dt>
+                <dd class="col-sm-9">{{ task.createdAt|date('Y-m-d H:i:s') }}</dd>
+            </dl>
+            {# Add edit/delete buttons here #}
+            <a href="#" class="btn btn-primary">Edit Task</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Task History
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Changes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for history in task.getTaskHistories()|reverse %}
+                        <tr>
+                            <td>{{ history.getTimestamp()|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ history.getUser().getFirstname() }}</td>
+                            <td>{{ history.getAction() }}</td>
+                            <td>
+                                {% if history.getChanges() %}
+                                    <ul>
+                                        {% for field, change in history.getChanges() %}
+                                            <li><strong>{{ field }}:</strong> "{{ change.old }}" -> "{{ change.new }}"</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No history found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
