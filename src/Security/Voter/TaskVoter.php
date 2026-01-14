@@ -11,9 +11,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class TaskVoter extends Voter
 {
-    public const EDIT = 'EDIT';
-    public const VIEW = 'VIEW';
-    public const DELETE = 'DELETE';
+    public const EDIT = 'edit';
+    public const VIEW = 'view';
+    public const DELETE = 'delete';
 
     public function __construct(private readonly Security $security)
     {
@@ -58,6 +58,6 @@ final class TaskVoter extends Voter
 
     private function canDelete(Task $task, UserInterface $user): bool
     {
-        return false;
+        return $task->getAuthor() === $user;
     }
 }

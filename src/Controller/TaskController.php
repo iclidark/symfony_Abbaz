@@ -18,7 +18,9 @@ class TaskController extends AbstractController
     #[Route('/tasks', name: 'task_list')]
     public function index(TaskRepository $taskRepository): Response
     {
-        $tasks = $taskRepository->findAll();
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $tasks = $taskRepository->findBy(['author' => $this->getUser()]);
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
@@ -33,7 +35,6 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Assign the current user as the author
             $user = $this->getUser();
             if (!$user) {
                 throw new AccessDeniedException('You must be logged in to create a task.');
@@ -53,13 +54,10 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/task/{id}/edit', name: 'task_edit')]
+    #[Route('/task/{id}/edit', name: 'task_edit', requirements: ['id' => '\d+'])]
     public function edit(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
-        // Security check: ensure the current user is the author of the task
-        if ($this->getUser() !== $task->getAuthor()) {
-            throw new AccessDeniedException('You are not allowed to edit this task.');
-        }
+        $this->denyAccessUnlessGranted('edit', $task);
 
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
@@ -78,15 +76,11 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/task/{id}', name: 'task_delete', methods: ['POST'])]
+    #[Route('/task/{id}', name: 'task_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
-        // Security check: ensure the current user is the author of the task
-        if ($this->getUser() !== $task->getAuthor()) {
-            throw new AccessDeniedException('You are not allowed to delete this task.');
-        }
+        $this->denyAccessUnlessGranted('delete', $task);
 
-        // Security check: validate the CSRF token
         if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             $entityManager->remove($task);
             $entityManager->flush();
@@ -99,9 +93,11 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('task_list');
     }
 
-    #[Route('/task/{id}', name: 'task_show', methods: ['GET'])]
+    #[Route('/task/{id}', name: 'task_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Task $task, TaskHistoryRepository $taskHistoryRepository): Response
     {
+        $this->denyAccessUnlessGranted('view', $task);
+
         $history = $taskHistoryRepository->getTaskHistory($task->getId());
 
         return $this->render('task/show.html.twig', [
