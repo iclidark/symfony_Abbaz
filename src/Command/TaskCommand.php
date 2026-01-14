@@ -44,7 +44,7 @@ class TaskCommand extends Command
                     $io->error('Title and description are required to create a task.');
                     return Command::FAILURE;
                 }
-                $this->taskFileService->createTask($title, $description);
+                $this->taskFileService->createTask(['title' => $title, 'description' => $description]);
                 $io->success('Task created successfully.');
                 break;
 
@@ -57,7 +57,7 @@ class TaskCommand extends Command
                     return Command::FAILURE;
                 }
                 try {
-                    $this->taskFileService->updateTask($id, $title, $description);
+                    $this->taskFileService->updateTask($id, ['title' => $title, 'description' => $description]);
                     $io->success("Task {$id} updated successfully.");
                 } catch (\Exception $e) {
                     $io->error($e->getMessage());
@@ -67,7 +67,7 @@ class TaskCommand extends Command
 
             case 'list':
                 $tasks = $this->taskFileService->listTasks();
-                $io->table(['ID', 'Title'], $tasks);
+                $io->table(['ID', 'Title'], array_map(fn($task) => [$task['id'], $task['title']], $tasks));
                 break;
 
             case 'get':
@@ -78,9 +78,13 @@ class TaskCommand extends Command
                 }
                 try {
                     $task = $this->taskFileService->getTask($id);
+                    $createdAt = $task['createdAt'];
+                    if ($createdAt instanceof \DateTimeImmutable) {
+                        $createdAt = $createdAt->format('Y-m-d H:i:s');
+                    }
                     $io->writeln("Title: {$task['title']}");
                     $io->writeln("Description: {$task['description']}");
-                    $io->writeln("Created At: {$task['createdAt']->format('Y-m-d H:i:s')}");
+                    $io->writeln("Created At: {$createdAt}");
                 } catch (\Exception $e) {
                     $io->error($e->getMessage());
                     return Command::FAILURE;

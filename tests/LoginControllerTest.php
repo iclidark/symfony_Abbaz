@@ -29,7 +29,10 @@ class LoginControllerTest extends WebTestCase
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = $container->get('security.user_password_hasher');
 
-        $user = (new User())->setEmail('email@example.com');
+        $user = (new User())
+            ->setEmail('email@example.com')
+            ->setFirstname('John')
+            ->setLastname('Doe');
         $user->setPassword($passwordHasher->hashPassword($user, 'password'));
 
         $em->persist($user);
@@ -42,9 +45,9 @@ class LoginControllerTest extends WebTestCase
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
 
-        $this->client->submitForm('Sign in', [
-            '_username' => 'doesNotExist@example.com',
-            '_password' => 'password',
+        $this->client->submitForm('Se connecter', [
+            'email' => 'doesNotExist@example.com',
+            'password' => 'password',
         ]);
 
         self::assertResponseRedirects('/login');
@@ -57,9 +60,9 @@ class LoginControllerTest extends WebTestCase
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
 
-        $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
-            '_password' => 'bad-password',
+        $this->client->submitForm('Se connecter', [
+            'email' => 'email@example.com',
+            'password' => 'bad-password',
         ]);
 
         self::assertResponseRedirects('/login');
@@ -69,9 +72,9 @@ class LoginControllerTest extends WebTestCase
         self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
 
         // Success - Login with valid credentials is allowed.
-        $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
-            '_password' => 'password',
+        $this->client->submitForm('Se connecter', [
+            'email' => 'email@example.com',
+            'password' => 'password',
         ]);
 
         self::assertResponseRedirects('/');

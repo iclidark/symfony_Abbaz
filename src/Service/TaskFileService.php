@@ -4,26 +4,25 @@ namespace App\Service;
 
 class TaskFileService
 {
-    private $tasks = [];
-    private $filename;
+    private array $tasks = [];
+    private string $filename;
 
-    // Pour la simplicité, nous allons coder en dur le chemin du fichier.
-    // Dans une vraie application, cela viendrait d'un paramètre de configuration.
     public function __construct(string $projectDir)
     {
         $this->filename = $projectDir . '/data/tasks.json';
         if (file_exists($this->filename)) {
-            $this->tasks = json_decode(file_get_contents($this->filename), true);
+            $this->tasks = json_decode(file_get_contents($this->filename), true) ?? [];
         } else {
-            // Créer des données par défaut si le fichier n'existe pas
-            $this->tasks = [
-                ['id' => 'task_1', 'title' => 'Real Task 1', 'description' => 'Description for real task 1', 'createdAt' => new \DateTimeImmutable()],
-                ['id' => 'task_2', 'title' => 'Real Task 2', 'description' => 'Description for real task 2', 'createdAt' => new \DateTimeImmutable()],
-            ];
+            $this->tasks = [];
         }
     }
 
-    public function getTasks(): array
+    private function save(): void
+    {
+        file_put_contents($this->filename, json_encode($this->tasks, JSON_PRETTY_PRINT));
+    }
+
+    public function listTasks(): array
     {
         return $this->tasks;
     }
@@ -36,5 +35,47 @@ class TaskFileService
             }
         }
         return null;
+    }
+
+    public function createTask(array $data): array
+    {
+        $newTask = [
+            'id' => uniqid('task_'),
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'createdAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ISO8601),
+        ];
+        $this->tasks[] = $newTask;
+        $this->save();
+        return $newTask;
+    }
+
+    public function updateTask(string $id, array $data): ?array
+    {
+        foreach ($this->tasks as &$task) {
+            if ($task['id'] === $id) {
+                if (isset($data['title'])) {
+                    $task['title'] = $data['title'];
+                }
+                if (isset($data['description'])) {
+                    $task['description'] = $data['description'];
+                }
+                $this->save();
+                return $task;
+            }
+        }
+        return null;
+    }
+
+    public function deleteTask(string $id): bool
+    {
+        foreach ($this->tasks as $key => $task) {
+            if ($task['id'] === $id) {
+                unset($this->tasks[$key]);
+                $this->save();
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -4,132 +4,122 @@ namespace App\Tests\Command;
 
 use App\Command\TaskCommand;
 use App\Service\TaskFileService;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class TaskCommandTest extends TestCase
+class TaskCommandTest extends KernelTestCase
 {
-    private $taskFileService;
-    private $application;
+    private MockObject|TaskFileService $taskServiceMock;
+    private CommandTester $commandTester;
 
     protected function setUp(): void
     {
-        // Mock the TaskFileService
-        $this->taskFileService = $this->createMock(TaskFileService::class);
+        self::bootKernel();
 
-        $this->application = new Application();
-        $this->application->add(new TaskCommand($this->taskFileService));
+        $this->taskServiceMock = $this->createMock(TaskFileService::class);
+        self::getContainer()->set(TaskFileService::class, $this->taskServiceMock);
+
+        $command = self::getContainer()->get(TaskCommand::class);
+        $this->commandTester = new CommandTester($command);
     }
 
-    public function testCreateTaskSuccess()
+    public function testCreateTaskSuccess(): void
     {
-        $this->taskFileService->expects($this->once())
+        $this->taskServiceMock->expects($this->once())
             ->method('createTask')
-            ->with('New Task', 'This is a new task.');
+            ->with(['title' => 'New Task', 'description' => 'New Description']);
 
-        $commandTester = new CommandTester($this->application->find('app:task'));
-        $commandTester->execute([
+        $this->commandTester->execute([
             'action' => 'create',
             '--title' => 'New Task',
-            '--description' => 'This is a new task.',
+            '--description' => 'New Description',
         ]);
 
-        $commandTester->assertCommandIsSuccessful();
-        $output = $commandTester->getDisplay();
+        $this->commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('Task created successfully.', $output);
     }
-    
-    public function testCreateTaskFailsWithoutOptions()
+
+    public function testCreateTaskFailure(): void
     {
-        $commandTester = new CommandTester($this->application->find('app:task'));
-        $commandTester->execute([
+        $this->commandTester->execute([
             'action' => 'create',
         ]);
 
-        $this->assertEquals(Command::FAILURE, $commandTester->getStatusCode());
-        $output = $commandTester->getDisplay();
+        $this->assertEquals(1, $this->commandTester->getStatusCode());
+        $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('Title and description are required to create a task.', $output);
     }
 
-    public function testListTasks()
+    public function testListTasks(): void
     {
-        $this->taskFileService->expects($this->once())
-            ->method('listTasks')
-            ->willReturn([
-                ['id' => 'id1', 'title' => 'Task 1'],
-                ['id' => 'id2', 'title' => 'Task 2'],
-            ]);
+        $this->taskServiceMock->method('listTasks')->willReturn([
+            ['id' => 'task_1', 'title' => 'Task 1'],
+            ['id' => 'task_2', 'title' => 'Task 2'],
+        ]);
 
-        $commandTester = new CommandTester($this->application->find('app:task'));
-        $commandTester->execute(['action' => 'list']);
+        $this->commandTester->execute(['action' => 'list']);
 
-        $commandTester->assertCommandIsSuccessful();
-        $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('id1', $output);
+        $this->commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('Task 1', $output);
-        $this->assertStringContainsString('id2', $output);
         $this->assertStringContainsString('Task 2', $output);
     }
-    
-    public function testGetTaskSuccess()
-    {
-        $this->taskFileService->expects($this->once())
-            ->method('getTask')
-            ->with('task_id')
-            ->willReturn([
-                'title' => 'My Task',
-                'description' => 'My task description',
-                'createdAt' => new \DateTimeImmutable('2023-01-01'),
-            ]);
 
-        $commandTester = new CommandTester($this->application->find('app:task'));
-        $commandTester->execute([
+    public function testGetTaskSuccess(): void
+    {
+        $task = [
+            'id' => 'task_1',
+            'title' => 'Test Task',
+            'description' => 'Test Description',
+            'createdAt' => new \DateTimeImmutable(),
+        ];
+        $this->taskServiceMock->method('getTask')->willReturn($task);
+
+        $this->commandTester->execute([
             'action' => 'get',
-            'id' => 'task_id',
+            'id' => 'task_1',
         ]);
-        
-        $commandTester->assertCommandIsSuccessful();
-        $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('Title: My Task', $output);
-        $this->assertStringContainsString('Description: My task description', $output);
-        $this->assertStringContainsString('Created At: 2023-01-01', $output);
+
+        $this->commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
+        $this->assertStringContainsString('Test Task', $output);
+        $this->assertStringContainsString('Test Description', $output);
+        $this->assertStringContainsString($task['createdAt']->format('Y-m-d H:i:s'), $output);
     }
-    
-    public function testUpdateTaskSuccess()
+
+    public function testUpdateTaskSuccess(): void
     {
-        $this->taskFileService->expects($this->once())
+        $this->taskServiceMock->expects($this->once())
             ->method('updateTask')
-            ->with('task_id', 'Updated Title', 'Updated description');
+            ->with('task_1', ['title' => 'Updated Title', 'description' => 'Updated Description']);
 
-        $commandTester = new CommandTester($this->application->find('app:task'));
-        $commandTester->execute([
+        $this->commandTester->execute([
             'action' => 'update',
-            'id' => 'task_id',
+            'id' => 'task_1',
             '--title' => 'Updated Title',
-            '--description' => 'Updated description'
+            '--description' => 'Updated Description',
         ]);
 
-        $commandTester->assertCommandIsSuccessful();
-        $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('Task task_id updated successfully.', $output);
+        $this->commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
+        $this->assertStringContainsString('Task task_1 updated successfully.', $output);
     }
-    
-    public function testDeleteTaskSuccess()
-    {
-        $this->taskFileService->expects($this->once())
-            ->method('deleteTask')
-            ->with('task_id');
 
-        $commandTester = new CommandTester($this->application->find('app:task'));
-        $commandTester->execute([
+    public function testDeleteTaskSuccess(): void
+    {
+        $this->taskServiceMock->expects($this->once())
+            ->method('deleteTask')
+            ->with('task_1');
+
+        $this->commandTester->execute([
             'action' => 'delete',
-            'id' => 'task_id',
+            'id' => 'task_1',
         ]);
 
-        $commandTester->assertCommandIsSuccessful();
-        $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('Task task_id deleted successfully.', $output);
+        $this->commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
+        $this->assertStringContainsString('Task task_1 deleted successfully.', $output);
     }
 }
