@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact - Task Manager{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h1 class="mb-4">Contactez-nous</h1>
+            <p class="lead mb-4">
+                Pour toute question, suggestion ou demande d'assistance, n'hésitez pas à nous envoyer un e-mail. Nous nous efforçons de répondre dans les plus brefs délais.
+            </p>
+            <div class="mt-4">
+                <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
+                <h5>Par e-mail</h5>
+                <p>
+                    <a href="mailto:contact@taskmanager.com">contact@taskmanager.com</a>
+                </p>
+            </div>
+            <div class="mt-5">
+                <h5>Suivez-nous</h5>
+                <a href="#" class="btn btn-outline-primary btn-lg me-2"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="btn btn-outline-primary btn-lg me-2"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="btn btn-outline-primary btn-lg"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

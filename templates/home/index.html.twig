@@ -1,16 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenue !{% endblock %}
+{% block title %}Bienvenue sur Task Manager{% endblock %}
 
 {% block body %}
-<div class="container text-center mt-5">
-    <div class="jumbotron">
-        <h1 class="display-4">Bienvenue sur votre gestionnaire de tâches</h1>
+<div class="container mt-5">
+    <div class="jumbotron text-center bg-light p-5 rounded-lg">
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto">
+                 <img src="{{ asset('images/image1.png') }}" alt="Illustration 1" class="img-fluid rounded" style="max-height: 80px;">
+            </div>
+            <div class="col-auto">
+                <img src="{{ asset('images/todolist.jpg') }}" alt="Illustration 2" class="img-fluid rounded" style="max-height: 80px;">
+            </div>
+        </div>
+
+        <h1 class="display-4">Bienvenue sur Task Manager</h1>
         <p class="lead">Organisez votre travail et votre vie, enfin simplement.</p>
         <hr class="my-4">
         <p>Commencez dès maintenant en créant votre première tâche ou en consultant votre liste.</p>
-        <a class="btn btn-primary btn-lg" href="{{ path('task_list') }}" role="button"><i class="fa-solid fa-tasks me-2"></i>Voir mes tâches</a>
-        <a class="btn btn-success btn-lg" href="{{ path('task_new') }}" role="button"><i class="fa-solid fa-plus me-2"></i>Créer une nouvelle tâche</a>
+        <div>
+            <a class="btn btn-primary btn-lg" href="{{ path('task_list') }}" role="button"><i class="fa-solid fa-tasks me-2"></i>Voir mes tâches</a>
+            <a class="btn btn-success btn-lg" href="{{ path('task_new') }}" role="button"><i class="fa-solid fa-plus me-2"></i>Créer une nouvelle tâche</a>
+        </div>
     </div>
 </div>
 {% endblock %}
